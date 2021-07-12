@@ -1,7 +1,7 @@
 import React from 'react';
 import {UploadImage} from './UploadImage.jsx';
 import {DisplayImage} from './Display_Image.jsx';
-import {Button } from 'react-bootstrap';
+import {Button, Container,Row,Col } from 'react-bootstrap';
 import axios from "axios";
 var FormData = require('form-data');
 
@@ -11,10 +11,17 @@ export class CreatePage extends React.Component
 	{
 		super(props);
 		this.state ={
+			isImageUploaded: false,
+			isFormSubmitted: false,
 			uploadedImage: "",
 			selectedGender: "male",
+			bobbleHead:""
 		}
+		this.handleImageUpload = this.handleImageUpload.bind(this);
+		this.handleSubmitImageUpload = this.handleSubmitImageUpload.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleClickMale = this.handleClickMale.bind(this);
+		this.handleClickFemale = this.handleClickFemale.bind(this);
 	}
 	handleImageUpload(event)
 	{
@@ -27,13 +34,18 @@ export class CreatePage extends React.Component
 	    	reader.readAsDataURL(event.target.files[0]);
 		}
 	}
-	async handleSubmit(event) 
+	async handleSubmitImageUpload(event) 
 	{
 	    event.preventDefault();
-	    const form  = new FormData();
+		this.setState({
+			isImageUploaded: true
+		})
+	}
+	async handleSubmit()
+	{
+		const form  = new FormData();
 	    form.append('imageBase64', this.state.uploadedImage.slice(22));
 	    form.append('gender', this.state.selectedGender)
-	    form.append('facetone', '#fcb05f')
 	    const bobbleUrl ='https://bobblification.bobbleapp.me/api/v3/bobbleHead';
 	    const result = await axios({
 			method: "post",
@@ -41,20 +53,51 @@ export class CreatePage extends React.Component
 			data: form,
 			headers: { "Content-Type": "multipart/form-data" },
 		})
-		console.log(result);
 		this.setState({
-			uploadedImage: 'data:image/png;base64,'+result.data.bobbleHead
+			isFormSubmitted: true,
+			bobbleHead: 'data:image/png;base64,'+result.data.bobbleHead
 		})
 	}
-
+	handleClickMale(event)
+	{
+		this.setState({
+			selectedGender: 'male'
+		})
+		this.handleSubmit();
+	}
+	handleClickFemale(event)
+	{
+		this.setState({
+			selectedGender: 'female'
+		})
+		this.handleSubmit();
+	}
 	render()
 	{
+		if(!this.state.isImageUploaded)
+		{
+			return(
+				<form onSubmit={this.handleSubmitImageUpload}>
+					<UploadImage onChange={(event)=>this.handleImageUpload(event)} />
+					<DisplayImage uploadedImage={this.state.uploadedImage}/>
+					<Button as="input" type="submit" value="Submit" />
+				</form>
+			);
+		}
+		if(!this.state.isFormSubmitted)
+		{
+			return(
+				<div>
+					<DisplayImage uploadedImage={this.state.uploadedImage}/>
+					<Button variant="primary" onClick={this.handleClickMale}>Male</Button>
+					<Button variant="primary" onClick={this.handleClickFemale}>Female</Button>
+				</div>
+			);
+		}
 		return(
-			<form onSubmit={this.handleSubmit}>
-				<UploadImage onChange={(event)=>this.handleImageUpload(event)} />
-				<DisplayImage uploadedImage={this.state.uploadedImage}/>
-				<Button as="input" type="submit" value="Submit" />
-			</form>
+			<div>
+				<DisplayImage uploadedImage={this.state.bobbleHead}/>
+			</div>
 		);
 	}
 }
