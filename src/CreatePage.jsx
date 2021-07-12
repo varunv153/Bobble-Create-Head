@@ -15,7 +15,8 @@ export class CreatePage extends React.Component
 			isFormSubmitted: false,
 			uploadedImage: "",
 			selectedGender: "male",
-			bobbleHead:""
+			bobbleHead:"",
+			gif:""
 		}
 		this.handleImageUpload = this.handleImageUpload.bind(this);
 		this.handleSubmitImageUpload = this.handleSubmitImageUpload.bind(this);
@@ -72,6 +73,27 @@ export class CreatePage extends React.Component
 		})
 		this.handleSubmit();
 	}
+	async createGif()
+	{
+		const blob = new Blob([this.state.bobbleHead],{
+			type: "image/png"
+		});
+		const form  = new FormData();
+	    form.append('image', blob);
+	    const bobbleGifUrl ='https://gifs-content-api.bobbleapp.me/v1/gifs/4107';
+	    try{
+		    const result = await axios({
+				method: "post",
+				url: bobbleGifUrl,
+				data: form,
+				headers: { "Content-Type": "multipart/form-data" },
+			})
+			console.log(result);
+		}
+		catch(err){
+			console.log(err);
+		}
+	}
 	render()
 	{
 		if(!this.state.isImageUploaded)
@@ -94,6 +116,7 @@ export class CreatePage extends React.Component
 				</div>
 			);
 		}
+		this.createGif();
 		return(
 			<div>
 				<DisplayImage uploadedImage={this.state.bobbleHead}/>
