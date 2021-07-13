@@ -18,7 +18,7 @@ export class CustomWebcam extends React.Component
 	{
 		return(
 			<Container>
-				<Webcam mirrored ref='webcam'/>
+				<Webcam videoConstraints={{"width": 360,"height": 360}} screenshotFormat="image/jpeg" mirrored ref='webcam'/>
 				<button onClick={()=>this.screenshot()}>Capture</button>
 			</Container>
 		)

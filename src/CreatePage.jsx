@@ -15,7 +15,8 @@ export class CreatePage extends React.Component
 			uploadedImage: "",
 			selectedGender: "male",
 			bobbleHead:"",
-			gif:""
+			gif:"",
+			err:""
 		}
 		this.handleImageUpload = this.handleImageUpload.bind(this);
 		this.handleImageCapture = this.handleImageCapture.bind(this);
@@ -51,16 +52,24 @@ export class CreatePage extends React.Component
 	    form.append('imageBase64', this.state.uploadedImage.slice(22));
 	    form.append('gender', this.state.selectedGender)
 	    const bobbleUrl ='https://bobblification.bobbleapp.me/api/v3/bobbleHead';
-	    const result = await axios({
-			method: "post",
-			url: bobbleUrl,
-			data: form,
-			headers: { "Content-Type": "multipart/form-data" },
-		})
-		this.setState({
-			isFormSubmitted: true,
-			bobbleHead: 'data:image/png;base64,'+result.data.bobbleHead
-		})
+	    try
+	    {
+    		const result = await axios({
+				method: "post",
+				url: bobbleUrl,
+				data: form,
+				headers: { "Content-Type": "multipart/form-data" },
+			})
+			this.setState({
+				isFormSubmitted: true,
+				bobbleHead: 'data:image/png;base64,'+result.data.bobbleHead
+			})
+		}
+		catch(err)
+		{
+			this.setState({err:JSON.stringify(err)});
+		}
+		
 	}
 	handleClickMale(event)
 	{
@@ -137,6 +146,7 @@ export class CreatePage extends React.Component
 		}
 		return(
 			<Container>
+				{this.state.err?<p>{this.state.err}</p>:null}
 				<Row className="justify-content-center">
 					<Card className="shadow">
 						<Row className="justify-content-center">
