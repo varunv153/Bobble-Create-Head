@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import {HomePage} from './HomePage.jsx';
 import {CreatePage} from './CreatePage.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
 
 class App extends React.Component 
 {

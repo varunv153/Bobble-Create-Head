@@ -12,7 +12,7 @@ export class HomePage extends React.Component
 					<Col>
 						<Jumbotron className="bg-white">
 							<h1>Take a selfie,</h1>
-							<h2>Make countless Stickers and GIFs</h2>
+							<h4>Make countless Stickers and GIFs</h4>
 							<Link to="/createBobble">
 								<Button className="shadow" variant="primary">Create your bobble</Button>
 							</Link>

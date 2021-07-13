@@ -1,7 +1,6 @@
 import React from 'react';
 import {UploadImage} from './UploadImage.jsx';
-import {DisplayImage} from './Display_Image.jsx';
-import {Button, Container,Row,Col } from 'react-bootstrap';
+import {Card,Button, Container,Row,Image,Col } from 'react-bootstrap';
 import axios from "axios";
 var FormData = require('form-data');
 
@@ -34,6 +33,7 @@ export class CreatePage extends React.Component
 	    	};
 	    	reader.readAsDataURL(event.target.files[0]);
 		}
+		this.handleSubmitImageUpload(event);
 	}
 	async handleSubmitImageUpload(event) 
 	{
@@ -73,6 +73,7 @@ export class CreatePage extends React.Component
 		})
 		this.handleSubmit();
 	}
+	/*
 	async createGif()
 	{
 		const blob = new Blob([this.state.bobbleHead],{
@@ -93,34 +94,59 @@ export class CreatePage extends React.Component
 		catch(err){
 			console.log(err);
 		}
-	}
+	}*/
 	render()
 	{
+		let contentInsideCard, imageStep;
 		if(!this.state.isImageUploaded)
 		{
-			return(
-				<form onSubmit={this.handleSubmitImageUpload}>
-					<UploadImage onChange={(event)=>this.handleImageUpload(event)} />
-					<DisplayImage uploadedImage={this.state.uploadedImage}/>
-					<Button as="input" type="submit" value="Submit" />
-				</form>
-			);
-		}
-		if(!this.state.isFormSubmitted)
-		{
-			return(
+			contentInsideCard =(
 				<div>
-					<DisplayImage uploadedImage={this.state.uploadedImage}/>
-					<Button variant="primary" onClick={this.handleClickMale}>Male</Button>
-					<Button variant="primary" onClick={this.handleClickFemale}>Female</Button>
+					<Image style={{maxWidth: '400px'}} src="Images/instructions.png"/>
+					<p style={{fontSize: '22px'}} className="text-center my-4">Pose with a Straight Face</p>
+					<UploadImage onChange={(event)=>this.handleImageUpload(event)} />
+				</div>
+			);
+			imageStep = "Images/step-1.png";
+		}
+		else if(!this.state.isFormSubmitted)
+		{
+
+			contentInsideCard = (
+				<Container className="text-center">
+					<div>
+						<Image className="mb-4" style={{width: "196px"}} src={this.state.uploadedImage} alt="Uploaded" roundedCircle/>
+					</div>
+					<Image style={{width: "128px"}} className="mx-4 gender-icon" src="Images/male-icon.png" onClick={this.handleClickMale}/>
+					<Image style={{width: "128px"}} className="mx-4 gender-icon" src="Images/female-icon.png" onClick={this.handleClickFemale}/>
+				</Container>
+			);
+			imageStep = "Images/step-2.png";
+		}
+		else
+		{
+			//this.createGif();
+			contentInsideCard = (
+				<div>
+					<Image src={this.state.bobbleHead}/>
 				</div>
 			);
 		}
-		this.createGif();
 		return(
-			<div>
-				<DisplayImage uploadedImage={this.state.bobbleHead}/>
-			</div>
+			<Container>
+				<Row className="justify-content-center">
+					<Card className="shadow">
+						<Row className="justify-content-center">
+							<Image className="my-4 mx-auto" style={{maxWidth: '300px'}} src={imageStep}/>
+						</Row>
+						<Row className="justify-content-center">
+							<Container className="my-4 mx-4">
+								{contentInsideCard}
+							</Container>
+						</Row>
+					</Card>
+				</Row>
+			</Container>
 		);
 	}
 }
