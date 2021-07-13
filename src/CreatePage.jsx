@@ -13,6 +13,7 @@ export class CreatePage extends React.Component
 		this.state ={
 			isImageUploaded: false,
 			isFormSubmitted: false,
+			isGifGot: false,
 			uploadedImage: "",
 			selectedGender: "male",
 			bobbleHead:"",
@@ -114,7 +115,7 @@ export class CreatePage extends React.Component
 				data: form,
 				headers: { "Content-Type": "multipart/form-data" },
 			})
-			this.setState({err:JSON.stringify(result.data.url)});
+			this.setState({isGifGot:true, gif:result.data.url});
 		}
 		catch(err)
 		{
@@ -149,7 +150,7 @@ export class CreatePage extends React.Component
 			);
 			imageStep = "Images/step-2.png";
 		}
-		else
+		else if(!this.state.isGifGot)
 		{
 			this.createGif();
 			contentInsideCard = (
@@ -158,6 +159,11 @@ export class CreatePage extends React.Component
 				</div>
 			);
 		}
+		else
+		{
+			contentInsideCard = (<Image src={this.state.gif} />);
+		}
+
 		return(
 			<Container>
 				{this.state.err?<p>{this.state.err}</p>:null}
