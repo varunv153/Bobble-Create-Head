@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Image, Row,Col,Modal, Button } from 'react-bootstrap';
+import { Image, Row,Col,Modal, Button } from 'react-bootstrap';
 import {CustomWebcam} from './CustomWebcam.jsx';
 
 export class UploadImage extends React.Component
@@ -38,10 +38,10 @@ export class UploadImage extends React.Component
 				<Modal show={this.state.showModal}>
 					<Modal.Header><Modal.Title>Face Capture</Modal.Title></Modal.Header>
 					<Modal.Body>
-						<CustomWebcam />
+						<CustomWebcam onCapture={(capturedImage)=>this.props.onCapture(capturedImage)}/>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button variant="secondary" onClick={()=>this.handleShowModal()}>Close</Button>
+						<Button variant="secondary" onClick={()=>this.handleShowModal() }>Close</Button>
 					</Modal.Footer>
 				</Modal>
 			</div>

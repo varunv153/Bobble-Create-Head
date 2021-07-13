@@ -1,6 +1,6 @@
 import React from 'react';
 import {UploadImage} from './UploadImage.jsx';
-import {Card,Button, Container,Row,Image,Col } from 'react-bootstrap';
+import {Card, Container,Row,Image } from 'react-bootstrap';
 import axios from "axios";
 var FormData = require('form-data');
 
@@ -18,13 +18,14 @@ export class CreatePage extends React.Component
 			gif:""
 		}
 		this.handleImageUpload = this.handleImageUpload.bind(this);
-		this.handleSubmitImageUpload = this.handleSubmitImageUpload.bind(this);
+		this.handleImageCapture = this.handleImageCapture.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleClickMale = this.handleClickMale.bind(this);
 		this.handleClickFemale = this.handleClickFemale.bind(this);
 	}
 	handleImageUpload(event)
 	{
+		event.preventDefault();
 		if (event.target.files && event.target.files[0]) 
 		{
 			let reader = new FileReader();
@@ -33,12 +34,14 @@ export class CreatePage extends React.Component
 	    	};
 	    	reader.readAsDataURL(event.target.files[0]);
 		}
-		this.handleSubmitImageUpload(event);
-	}
-	async handleSubmitImageUpload(event) 
-	{
-	    event.preventDefault();
 		this.setState({
+			isImageUploaded: true
+		})
+	}
+	handleImageCapture(capturedImage)
+	{
+		this.setState({
+			uploadedImage: capturedImage,
 			isImageUploaded: true
 		})
 	}
@@ -104,7 +107,7 @@ export class CreatePage extends React.Component
 				<div>
 					<Image style={{maxWidth: '400px'}} src="Images/instructions.png"/>
 					<p style={{fontSize: '22px'}} className="text-center my-4">Pose with a Straight Face</p>
-					<UploadImage onChange={(event)=>this.handleImageUpload(event)} />
+					<UploadImage onCapture={(capturedImage)=>this.handleImageCapture(capturedImage)} onChange={(event)=>this.handleImageUpload(event)} />
 				</div>
 			);
 			imageStep = "Images/step-1.png";
