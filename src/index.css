@@ -16,6 +16,16 @@ input[type="file"] {
   font-size: 15px;
   color: rgb(153,153,153);
 }
+.openCameraButton
+  {
+  position: absolute;
+  z-index: -1;
+  top: 6px;
+  left: 0;
+  font-size: 15px;
+  color: rgb(153,153,153);
+}
+
 .button-wrap {
   position: relative;
 }

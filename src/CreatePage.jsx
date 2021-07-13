@@ -2,6 +2,7 @@ import React from 'react';
 import {UploadImage} from './UploadImage.jsx';
 import {Card, Container,Row,Image } from 'react-bootstrap';
 import axios from "axios";
+var fs = require('fs')
 var FormData = require('form-data');
 
 export class CreatePage extends React.Component
@@ -24,6 +25,21 @@ export class CreatePage extends React.Component
 		this.handleClickMale = this.handleClickMale.bind(this);
 		this.handleClickFemale = this.handleClickFemale.bind(this);
 	}
+	dataURLtoFile(dataurl, filename) {
+ 
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), 
+            n = bstr.length, 
+            u8arr = new Uint8Array(n);
+            
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        
+        return new File([u8arr], filename, {type:mime});
+    }
+
 	handleImageUpload(event)
 	{
 		event.preventDefault();
@@ -49,7 +65,7 @@ export class CreatePage extends React.Component
 	async handleSubmit()
 	{
 		const form  = new FormData();
-	    form.append('imageBase64', this.state.uploadedImage.slice(22));
+	    form.append( 'imageBase64', this.state.uploadedImage.split(',')[1] );
 	    form.append('gender', this.state.selectedGender)
 	    const bobbleUrl ='https://bobblification.bobbleapp.me/api/v3/bobbleHead';
 	    try
@@ -85,14 +101,11 @@ export class CreatePage extends React.Component
 		})
 		this.handleSubmit();
 	}
-	/*
 	async createGif()
 	{
-		const blob = new Blob([this.state.bobbleHead],{
-			type: "image/png"
-		});
+		
 		const form  = new FormData();
-	    form.append('image', blob);
+	    form.append('image', this.dataURLtoFile(this.state.uploadedImage, "filename"));
 	    const bobbleGifUrl ='https://gifs-content-api.bobbleapp.me/v1/gifs/4107';
 	    try{
 		    const result = await axios({
@@ -101,12 +114,13 @@ export class CreatePage extends React.Component
 				data: form,
 				headers: { "Content-Type": "multipart/form-data" },
 			})
-			console.log(result);
+			this.setState({err:JSON.stringify(result.data.url)});
 		}
-		catch(err){
-			console.log(err);
+		catch(err)
+		{
+			this.setState({err:JSON.stringify(err)});
 		}
-	}*/
+	}
 	render()
 	{
 		let contentInsideCard, imageStep;
@@ -137,7 +151,7 @@ export class CreatePage extends React.Component
 		}
 		else
 		{
-			//this.createGif();
+			this.createGif();
 			contentInsideCard = (
 				<div>
 					<Image src={this.state.bobbleHead}/>

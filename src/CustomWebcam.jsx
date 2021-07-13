@@ -1,5 +1,5 @@
 import Webcam from "react-webcam";
-import {Container} from 'react-bootstrap';
+import {Button, Container} from 'react-bootstrap';
 import React from 'react';
 
 export class CustomWebcam extends React.Component
@@ -17,9 +17,14 @@ export class CustomWebcam extends React.Component
 	render()
 	{
 		return(
-			<Container>
-				<Webcam videoConstraints={{"width": 360,"height": 360}} screenshotFormat="image/jpeg" mirrored ref='webcam'/>
-				<button onClick={()=>this.screenshot()}>Capture</button>
+			<Container className="text-center">
+				<div>
+					<Webcam videoConstraints={{"width": 360,"height": 360}} screenshotFormat="image/jpeg" mirrored ref='webcam'/>
+				</div>
+				<div>
+					<br />
+					<Button variant="primary" onClick={()=>this.screenshot()}>Capture</Button>
+				</div>
 			</Container>
 		)
 	}

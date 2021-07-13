@@ -24,15 +24,19 @@ export class UploadImage extends React.Component
 		return(
 			<div>
 				<Row>
-					<Col>
+					<Col className="text-center">
 						<label for="upload" className="new-button text-center">
 							<Image style={{maxWidth: '30px'}} class="mb-0" src="/Images/Cloud_Upload.png" fluid/>
 							<p> Upload Photo</p>
 							<input id="upload" type="file" onChange={this.props.onChange} accept="image/*"/>
 						</label>
 					</Col>
-					<Col>
-						<Button onclickvariant="secondary" onClick={()=>this.handleShowModal()}>Camera</Button>
+					<Col className="text-center">
+						<label for="camera" className="new-button text-center">
+							<Image style={{maxWidth: '30px'}} class="mb-0" src="/Images/camera.png" fluid/>
+							<p>Open Camera</p>
+							<Button id="camera" className="d-none" onClick={()=>this.handleShowModal()}>Camera</Button>
+						</label>
 					</Col>
 				</Row>
 				<Modal show={this.state.showModal}>
