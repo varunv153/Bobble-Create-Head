@@ -1,0 +1,3 @@
+To Get Bobble Head : https://bobblification.bobbleapp.me/api/v3/bobbleHead
+To Get gif from Bobble Head : https://gifs-content-api.bobbleapp.me/v1/gifs/4107.
+To Get Sticker from Bobble Head : https://bobblification.bobbleapp.me/api/v3/sticker

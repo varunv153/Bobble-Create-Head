@@ -17,9 +17,10 @@ export class CreatePage extends React.Component
 			uploadedImage: "",
 			selectedGender: "male",
 			bobbleHead:"",
-			gif:"",
+			gif:[],
 			err:""
 		}
+		this.maleGifIDs = [4107,4129,4079,199,214,2907,2910];
 		this.handleImageUpload = this.handleImageUpload.bind(this);
 		this.handleImageCapture = this.handleImageCapture.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -107,19 +108,26 @@ export class CreatePage extends React.Component
 		
 		const form  = new FormData();
 	    form.append('image', this.dataURLtoFile(this.state.uploadedImage, "filename"));
-	    const bobbleGifUrl ='https://gifs-content-api.bobbleapp.me/v1/gifs/4107';
-	    try{
-		    const result = await axios({
-				method: "post",
-				url: bobbleGifUrl,
-				data: form,
-				headers: { "Content-Type": "multipart/form-data" },
-			})
-			this.setState({isGifGot:true, gif:result.data.url});
-		}
-		catch(err)
-		{
-			this.setState({err:JSON.stringify(err)});
+	    this.setState({isGifGot:true});
+	    for(let i of this.maleGifIDs)
+	    {
+		    const bobbleGifUrl ='https://gifs-content-api.bobbleapp.me/v1/gifs/'+i;
+		    console.log(i);
+		    try
+		    {
+			    const result = await axios({
+					method: "post",
+					url: bobbleGifUrl,
+					data: form,
+					headers: { "Content-Type": "multipart/form-data" },
+				})
+				
+				this.setState( (state,props) => ({ gif:state.gif.concat(result.data.url) }) );
+			}
+			catch(err)
+			{
+				this.setState({err:JSON.stringify(err)});
+			}
 		}
 	}
 	render()
@@ -152,16 +160,19 @@ export class CreatePage extends React.Component
 		}
 		else if(!this.state.isGifGot)
 		{
-			this.createGif();
 			contentInsideCard = (
 				<div>
 					<Image src={this.state.bobbleHead}/>
 				</div>
 			);
+			this.createGif();
 		}
 		else
 		{
-			contentInsideCard = (<Image src={this.state.gif} />);
+			contentInsideCard = this.state.gif.map((i)=>{
+				return( <Image style={{width: "128px"}} src={i} />);
+			});
+			console.log(contentInsideCard);
 		}
 
 		return(
