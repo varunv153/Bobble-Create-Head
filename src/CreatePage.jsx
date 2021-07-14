@@ -2,20 +2,8 @@ import React from 'react';
 import {Step1} from './step1.jsx';
 import {Step2} from './step2.jsx';
 import {Card, Container,Row,Image } from 'react-bootstrap';
-import axios from "axios";
-var FormData = require('form-data');
+import {createSticker, createGif} from "./GifAndStickerFunctions.jsx"
 
-function dataURLtoFile(dataurl, filename) 
-{
-	var arr = dataurl.split(','),
-		mime = arr[0].match(/:(.*?);/)[1],
-		bstr = atob(arr[1]), 
-		n = bstr.length, 
-		u8arr = new Uint8Array(n);
-	while(n--)
-		u8arr[n] = bstr.charCodeAt(n);
-	return new File([u8arr], filename, {type:mime});
-}
 export class CreatePage extends React.Component
 {
 	constructor(props)
@@ -26,12 +14,18 @@ export class CreatePage extends React.Component
 			isFormSubmitted: false,
 			isGifGot: false,
 			uploadedImage: "",
-			selectedGender: "",
+			gender: "",
 			bobbleHead:"",
 			gif:[],
-			err:""
+			err:"",
+			bobbleHeadFullInfo:""
 		}
 		this.maleGifIDs = [4107,4129,4079,199,214,2907,2910];
+		this.femaleGifIDs=[1138,4081,3156,204,2919,1149];
+
+		this.maleStickerIds=[12466,12547,12214,12147,12150,12088];			
+		this.femaleStickerIds=[12166,12509,12097,12096,12155,12467];
+
 		this.setImageState = this.setImageState.bind(this);
 	}
 	setImageState(image)
@@ -51,35 +45,11 @@ export class CreatePage extends React.Component
 			return;
 		}
 		this.setState({
-			selectedGender: gender,
+			gender: gender,
 			isFormSubmitted: true,
-			bobbleHead: 'data:image/png;base64,'+result.data.bobbleHead
+			bobbleHead: 'data:image/png;base64,'+result.data.bobbleHead,
+			bobbleHeadFullInfo: result.data
 		})
-	}
-	async createGif()
-	{
-		
-		const form  = new FormData();
-	    form.append('image', dataURLtoFile(this.state.uploadedImage, "filename"));
-	    for(let i of this.maleGifIDs)
-	    {
-		    const bobbleGifUrl ='https://gifs-content-api.bobbleapp.me/v1/gifs/'+i;
-		    try
-		    {
-			    const result = await axios({
-					method: "post",
-					url: bobbleGifUrl,
-					data: form,
-					headers: { "Content-Type": "multipart/form-data" },
-				})
-				
-				this.setState( (state,props) => ({ gif:state.gif.concat(result.data.url), isGifGot:true}) );
-			}
-			catch(err)
-			{
-				this.setState({err:JSON.stringify(err)});
-			}
-		}
 	}
 	render()
 	{
@@ -101,7 +71,8 @@ export class CreatePage extends React.Component
 					<Image src={this.state.bobbleHead}/>
 				</div>
 			);
-			this.createGif();
+			createGif.apply(this);
+			createSticker.apply(this);
 		}
 		else
 		{
