@@ -26,16 +26,13 @@ export class CreatePage extends React.Component
 			isFormSubmitted: false,
 			isGifGot: false,
 			uploadedImage: "",
-			selectedGender: "male",
+			selectedGender: "",
 			bobbleHead:"",
 			gif:[],
 			err:""
 		}
 		this.maleGifIDs = [4107,4129,4079,199,214,2907,2910];
 		this.setImageState = this.setImageState.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleClickMale = this.handleClickMale.bind(this);
-		this.handleClickFemale = this.handleClickFemale.bind(this);
 	}
 	setImageState(image)
 	{
@@ -44,44 +41,20 @@ export class CreatePage extends React.Component
 			isImageUploaded: true
 		})
 	}
-	async handleSubmit()
+	async setBobbleHead(err, gender, result)
 	{
-		const form  = new FormData();
-	    form.append( 'imageBase64', this.state.uploadedImage.split(',')[1] );
-	    form.append('gender', this.state.selectedGender)
-	    const bobbleUrl ='https://bobblification.bobbleapp.me/api/v3/bobbleHead';
-	    try
-	    {
-    		const result = await axios({
-				method: "post",
-				url: bobbleUrl,
-				data: form,
-				headers: { "Content-Type": "multipart/form-data" },
-			})
-			this.setState({
-				isFormSubmitted: true,
-				bobbleHead: 'data:image/png;base64,'+result.data.bobbleHead
-			})
-		}
-		catch(err)
+		if(err)
 		{
-			this.setState({err:JSON.stringify(err)});
+			this.setState({
+				err:JSON.stringify(err)
+			})
+			return;
 		}
-		
-	}
-	handleClickMale(event)
-	{
 		this.setState({
-			selectedGender: 'male'
+			selectedGender: gender,
+			isFormSubmitted: true,
+			bobbleHead: 'data:image/png;base64,'+result.data.bobbleHead
 		})
-		this.handleSubmit();
-	}
-	handleClickFemale(event)
-	{
-		this.setState({
-			selectedGender: 'female'
-		})
-		this.handleSubmit();
 	}
 	async createGif()
 	{
@@ -91,7 +64,6 @@ export class CreatePage extends React.Component
 	    for(let i of this.maleGifIDs)
 	    {
 		    const bobbleGifUrl ='https://gifs-content-api.bobbleapp.me/v1/gifs/'+i;
-		    console.log(i);
 		    try
 		    {
 			    const result = await axios({
@@ -119,7 +91,7 @@ export class CreatePage extends React.Component
 		}
 		else if(!this.state.isFormSubmitted)
 		{
-			contentInsideCard = <Step2 uploadedImage={this.state.uploadedImage} handleClickMale={this.handleClickMale} handleClickFemale={this.handleClickFemale} />;
+			contentInsideCard = <Step2 uploadedImage={this.state.uploadedImage} handleSubmit={(err,gender,result)=>this.setBobbleHead(err,gender,result)} />;
 			imageStep = "Images/step-2.png";
 		}
 		else if(!this.state.isGifGot)
@@ -136,7 +108,6 @@ export class CreatePage extends React.Component
 			contentInsideCard = this.state.gif.map((i)=>{
 				return( <Image style={{width: "128px"}} src={i} />);
 			});
-			console.log(contentInsideCard);
 		}
 
 		return(
