@@ -1,10 +1,21 @@
 import React from 'react';
-import {UploadImage} from './UploadImage.jsx';
+import {Step1} from './step1.jsx';
+import {Step2} from './step2.jsx';
 import {Card, Container,Row,Image } from 'react-bootstrap';
 import axios from "axios";
-var fs = require('fs')
 var FormData = require('form-data');
 
+function dataURLtoFile(dataurl, filename) 
+{
+	var arr = dataurl.split(','),
+		mime = arr[0].match(/:(.*?);/)[1],
+		bstr = atob(arr[1]), 
+		n = bstr.length, 
+		u8arr = new Uint8Array(n);
+	while(n--)
+		u8arr[n] = bstr.charCodeAt(n);
+	return new File([u8arr], filename, {type:mime});
+}
 export class CreatePage extends React.Component
 {
 	constructor(props)
@@ -21,46 +32,15 @@ export class CreatePage extends React.Component
 			err:""
 		}
 		this.maleGifIDs = [4107,4129,4079,199,214,2907,2910];
-		this.handleImageUpload = this.handleImageUpload.bind(this);
-		this.handleImageCapture = this.handleImageCapture.bind(this);
+		this.setImageState = this.setImageState.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleClickMale = this.handleClickMale.bind(this);
 		this.handleClickFemale = this.handleClickFemale.bind(this);
 	}
-	dataURLtoFile(dataurl, filename) {
- 
-        var arr = dataurl.split(','),
-            mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), 
-            n = bstr.length, 
-            u8arr = new Uint8Array(n);
-            
-        while(n--){
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        
-        return new File([u8arr], filename, {type:mime});
-    }
-
-	handleImageUpload(event)
-	{
-		event.preventDefault();
-		if (event.target.files && event.target.files[0]) 
-		{
-			let reader = new FileReader();
-			reader.onload = (e) => {
-				this.setState({uploadedImage: e.target.result});
-	    	};
-	    	reader.readAsDataURL(event.target.files[0]);
-		}
-		this.setState({
-			isImageUploaded: true
-		})
-	}
-	handleImageCapture(capturedImage)
+	setImageState(image)
 	{
 		this.setState({
-			uploadedImage: capturedImage,
+			uploadedImage: image,
 			isImageUploaded: true
 		})
 	}
@@ -107,8 +87,7 @@ export class CreatePage extends React.Component
 	{
 		
 		const form  = new FormData();
-	    form.append('image', this.dataURLtoFile(this.state.uploadedImage, "filename"));
-	    this.setState({isGifGot:true});
+	    form.append('image', dataURLtoFile(this.state.uploadedImage, "filename"));
 	    for(let i of this.maleGifIDs)
 	    {
 		    const bobbleGifUrl ='https://gifs-content-api.bobbleapp.me/v1/gifs/'+i;
@@ -122,7 +101,7 @@ export class CreatePage extends React.Component
 					headers: { "Content-Type": "multipart/form-data" },
 				})
 				
-				this.setState( (state,props) => ({ gif:state.gif.concat(result.data.url) }) );
+				this.setState( (state,props) => ({ gif:state.gif.concat(result.data.url), isGifGot:true}) );
 			}
 			catch(err)
 			{
@@ -135,27 +114,12 @@ export class CreatePage extends React.Component
 		let contentInsideCard, imageStep;
 		if(!this.state.isImageUploaded)
 		{
-			contentInsideCard =(
-				<div>
-					<Image style={{maxWidth: '400px'}} src="Images/instructions.png"/>
-					<p style={{fontSize: '22px'}} className="text-center my-4">Pose with a Straight Face</p>
-					<UploadImage onCapture={(capturedImage)=>this.handleImageCapture(capturedImage)} onChange={(event)=>this.handleImageUpload(event)} />
-				</div>
-			);
+			contentInsideCard = <Step1 onGettingImage={(capturedImage)=>this.setImageState(capturedImage)}/>;
 			imageStep = "Images/step-1.png";
 		}
 		else if(!this.state.isFormSubmitted)
 		{
-
-			contentInsideCard = (
-				<Container className="text-center">
-					<div>
-						<Image className="mb-4" style={{width: "196px"}} src={this.state.uploadedImage} alt="Uploaded" roundedCircle/>
-					</div>
-					<Image style={{width: "128px"}} className="mx-4 gender-icon" src="Images/male-icon.png" onClick={this.handleClickMale}/>
-					<Image style={{width: "128px"}} className="mx-4 gender-icon" src="Images/female-icon.png" onClick={this.handleClickFemale}/>
-				</Container>
-			);
+			contentInsideCard = <Step2 uploadedImage={this.state.uploadedImage} handleClickMale={this.handleClickMale} handleClickFemale={this.handleClickFemale} />;
 			imageStep = "Images/step-2.png";
 		}
 		else if(!this.state.isGifGot)
