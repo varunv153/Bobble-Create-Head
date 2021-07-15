@@ -76,29 +76,39 @@ export class CreatePage extends React.Component
 		}
 		else
 		{
-			contentInsideCard = this.state.gif.map((i)=>{
-				return( <Image style={{width: "128px"}} src={i} />);
+			contentInsideCard = this.state.gif.map((i,index)=>{
+				return (<Image className="p-3" style={{width: "150px"}} src={i} />);
 			});
+
+			let totalLength=0;
+			if(this.state.gender=='male')
+				totalLength = this.maleGifIDs.length + this.maleStickerIds.length;
+			else if(this.state.gender=='female')
+				totalLength = this.femaleGifIDs.length + this.femaleStickerIds.length;
+			for(let i=contentInsideCard.length;i<totalLength;++i)
+				contentInsideCard.push(  <Image className="p-3" style={{width: "150px"}} src='Images/sample-sticker.jpg' /> );
+
+			contentInsideCard = (
+				<div className="text-left" fluid>
+					{contentInsideCard}
+				</div>
+			);
 		}
 
 		return(
-			<Container fluid>
-				{this.state.err?<p>{this.state.err}</p>:null}
-				<Row className="justify-content-center" style={{fontFamily:"Roboto,sans-serif"}}>
-					<Col lg={6} md={8} xs={12}>
-						<Card className="shadow" style={{width:"100%"}}>
-							<Container className="text-center">
-								<Image className="my-4 mx-2" style={{float:"none", width: '280px'}} src={imageStep} fluid/>
-							</Container>
-							<Row className="justify-content-center">
-								<Container className="my-4 mx-4 text-center">
-									{contentInsideCard}
-								</Container>
-							</Row>
-						</Card>
-					</Col>
-				</Row>
-			</Container>
+			<Row className="justify-content-center m-0" style={{fontFamily:"Roboto,sans-serif"}}>
+				<Col className="my-5 px-0" lg={6} md={8} xs={12}>
+					{this.state.err?<p>{this.state.err}</p>:null}
+					<Card className="pt-4 px-2" style={{borderRadius:"2%",width:"100%", webkitBoxShadow:"0 2px 4px 0 rgb(0 0 0 / 50%)"}}>
+						<div className="text-center mx-auto" style={{maxWidth:"300px"}}>
+							<Image src={imageStep} fluid/>
+						</div>
+						<Container className="px-0 py-4 text-center">
+							{contentInsideCard}
+						</Container>
+					</Card>
+				</Col>
+			</Row>
 		);
 	}
 }

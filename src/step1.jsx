@@ -18,7 +18,7 @@ export class Step1 extends React.Component
 	{
 		return(
 			<Container>
-				<Image src="Images/instructions.png" fluid/>
+				<Image style={{maxWidth:"70%"}} src="Images/instructions.png" fluid/>
 				<p className="text-center my-4">Pose with a Straight Face</p>
 				<UploadImage onCapture={(capturedImage)=>this.props.onGettingImage(capturedImage)} onChange={(event)=>this.handleImageUpload(event)} />
 			</Container>
