@@ -1,6 +1,7 @@
 import React from 'react';
 import {UploadImage} from './UploadImage.jsx';
-import {Image } from 'react-bootstrap';
+import {Container ,Image } from 'react-bootstrap';
+import './step1.css'
 
 export class Step1 extends React.Component
 {
@@ -16,11 +17,11 @@ export class Step1 extends React.Component
 	render()
 	{
 		return(
-			<div>
-				<Image style={{maxWidth: '400px'}} src="Images/instructions.png"/>
-				<p style={{fontSize: '22px'}} className="text-center my-4">Pose with a Straight Face</p>
+			<Container>
+				<Image src="Images/instructions.png" fluid/>
+				<p className="text-center my-4">Pose with a Straight Face</p>
 				<UploadImage onCapture={(capturedImage)=>this.props.onGettingImage(capturedImage)} onChange={(event)=>this.handleImageUpload(event)} />
-			</div>
+			</Container>
 		);
 	}
 }

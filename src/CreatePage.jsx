@@ -82,19 +82,21 @@ export class CreatePage extends React.Component
 		}
 
 		return(
-			<Container>
+			<Container fluid>
 				{this.state.err?<p>{this.state.err}</p>:null}
 				<Row className="justify-content-center" style={{fontFamily:"Roboto,sans-serif"}}>
-					<Card className="shadow" style={{width:"60%"}}>
-						<Row className="justify-content-center">
-							<Image className="my-4 mx-2" style={{float:"none", width: '280px'}} src={imageStep} fluid/>
-						</Row>
-						<Row className="justify-content-center">
-							<Container className="my-4 mx-4 text-center">
-								{contentInsideCard}
+					<Col lg={6} md={8} xs={12}>
+						<Card className="shadow" style={{width:"100%"}}>
+							<Container className="text-center">
+								<Image className="my-4 mx-2" style={{float:"none", width: '280px'}} src={imageStep} fluid/>
 							</Container>
-						</Row>
-					</Card>
+							<Row className="justify-content-center">
+								<Container className="my-4 mx-4 text-center">
+									{contentInsideCard}
+								</Container>
+							</Row>
+						</Card>
+					</Col>
 				</Row>
 			</Container>
 		);

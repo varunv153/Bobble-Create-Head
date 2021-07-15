@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container,Image } from 'react-bootstrap';
+import {Col, Row, Container,Image } from 'react-bootstrap';
 import axios from "axios";
 
 export class Step2 extends React.Component
@@ -46,8 +46,14 @@ export class Step2 extends React.Component
 				<div>
 					<Image className="mb-4" style={{width: "196px"}} src={this.props.uploadedImage} alt="Uploaded" roundedCircle/>
 				</div>
-				<Image style={{width: "128px"}} className="mx-1 gender-icon" src="Images/female-icon.png" onClick={this.handleClickFemale} />
-				<Image style={{width: "128px"}} className="mx-1 gender-icon" src="Images/male-icon.png" onClick={this.handleClickMale}/>
+				<Row>
+					<Col xs={6} className="text-right px-1">
+						<Image style={{width: "128px"}} className="gender-icon" src="Images/female-icon.png" onClick={this.handleClickFemale} fluid/>
+					</Col>
+					<Col xs={6} className="text-left px-1">
+						<Image style={{width: "128px"}} className="gender-icon" src="Images/male-icon.png" onClick={this.handleClickMale} fluid/>
+					</Col>
+				</Row>
 				
 			</Container>
 		);
