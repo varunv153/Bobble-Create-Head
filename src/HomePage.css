@@ -1,0 +1,26 @@
+@media (min-width: 992px) 
+{
+    .heading-1 
+    {
+        font-size: 42px;
+    }
+    .heading-2
+    {
+        font-size: 28px;
+    }
+}
+@media (max-width: 992px) 
+{
+    .heading-1 
+    {
+        font-size: 36px;
+    }
+    .heading-2
+    {
+        font-size: 20px;
+    }
+}
+h1
+{
+    color:  rgb(65, 65, 65);
+}

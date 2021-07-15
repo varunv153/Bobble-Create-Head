@@ -1,7 +1,7 @@
 import React from 'react';
 import {Step1} from './step1.jsx';
 import {Step2} from './step2.jsx';
-import {Card, Container,Row,Image } from 'react-bootstrap';
+import {Col,Card, Container,Row,Image } from 'react-bootstrap';
 import {createSticker, createGif} from "./GifAndStickerFunctions.jsx"
 
 export class CreatePage extends React.Component
@@ -84,13 +84,13 @@ export class CreatePage extends React.Component
 		return(
 			<Container>
 				{this.state.err?<p>{this.state.err}</p>:null}
-				<Row className="justify-content-center">
-					<Card className="shadow">
+				<Row className="justify-content-center" style={{fontFamily:"Roboto,sans-serif"}}>
+					<Card className="shadow" style={{width:"60%"}}>
 						<Row className="justify-content-center">
-							<Image className="my-4 mx-auto" style={{maxWidth: '300px'}} src={imageStep}/>
+							<Image className="my-4 mx-2" style={{float:"none", width: '280px'}} src={imageStep} fluid/>
 						</Row>
 						<Row className="justify-content-center">
-							<Container className="my-4 mx-4">
+							<Container className="my-4 mx-4 text-center">
 								{contentInsideCard}
 							</Container>
 						</Row>

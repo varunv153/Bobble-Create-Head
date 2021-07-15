@@ -26,16 +26,16 @@ export class UploadImage extends React.Component
 				<Row>
 					<Col className="text-center">
 						<label for="upload" className="new-button text-center">
-							<Image style={{maxWidth: '30px'}} class="mb-0" src="/Images/Cloud_Upload.png" fluid/>
-							<p> Upload Photo</p>
+							<Image className="pt-2" style={{maxWidth: '57px'}} class="mb-0" src="/Images/Cloud_Upload.png" fluid/>
+							<p style={{fontSize: "13.5px", fontWeight: "lighter"}} className="mb-1"> Upload Photo</p>
 							<input id="upload" type="file" onChange={this.props.onChange} accept="image/*"/>
 						</label>
 					</Col>
 					<Col className="text-center">
-						<label for="camera" className="new-button text-center">
-							<Image style={{maxWidth: '30px'}} class="mb-0" src="/Images/camera.png" fluid/>
-							<p>Open Camera</p>
-							<Button id="camera" className="d-none" onClick={()=>this.handleShowModal()}>Camera</Button>
+						<label id="openCamera" for="camera" className="new-button text-center">
+							<Image className="pt-2" style={{maxWidth: '36px'}} class="mb-0" src="/Images/camera.png" fluid/>
+							<p style={{fontSize: "13.5px", fontWeight: "lighter"}} className="mb-1">Click Photo</p>
+							<Button id="camera" className="d-none pb-0" onClick={()=>this.handleShowModal()}>Camera</Button>
 						</label>
 					</Col>
 				</Row>
