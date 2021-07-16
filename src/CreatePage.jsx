@@ -1,8 +1,9 @@
 import React from 'react';
 import {Step1} from './step1.jsx';
 import {Step2} from './step2.jsx';
-import {Spinner,Col,Card, Container,Row,Image } from 'react-bootstrap';
+import {Button,Spinner,Col,Card, Container,Row,Image } from 'react-bootstrap';
 import {createSticker, createGif} from "./GifAndStickerFunctions.jsx"
+import {FaChevronLeft} from 'react-icons/fa';
 
 export class CreatePage extends React.Component
 {
@@ -27,6 +28,7 @@ export class CreatePage extends React.Component
 		this.femaleStickerIds=[12166,12509,12097,12096,12155,12467];
 
 		this.setImageState = this.setImageState.bind(this);
+		this.handleBack = this.handleBack.bind(this);
 	}
 	setImageState(image)
 	{
@@ -34,6 +36,23 @@ export class CreatePage extends React.Component
 			uploadedImage: image,
 			isImageUploaded: true
 		})
+	}
+	handleBack()
+	{
+		if(this.state.isFormSubmitted)
+		{
+			this.setState({
+				isFormSubmitted:false
+			})
+			return;
+		}
+		if(this.state.isImageUploaded)
+		{
+			this.setState({
+				isImageUploaded:false
+			})
+			return;
+		}
 	}
 	async setBobbleHead(err, gender, result)
 	{
@@ -83,7 +102,6 @@ export class CreatePage extends React.Component
 					</Col>
 				);
 			});
-
 			let totalLength=0;
 			if(this.state.gender==='male')
 				totalLength = this.maleGifIDs.length + this.maleStickerIds.length;
@@ -94,7 +112,7 @@ export class CreatePage extends React.Component
 				contentInsideCard.push(
 					<Col lg={3} xs={6}>
 						<Image src='Images/sample-sticker.jpg' fluid/>
-						<Spinner animation="border" variant="primary" />
+						<Spinner style={{top:"50%", left:"50%"}} className="position-absolute" animation="border" variant="primary" />						
 					</Col>
 				);
 			}
@@ -111,6 +129,7 @@ export class CreatePage extends React.Component
 					{this.state.err?<p>{this.state.err}</p>:null}
 					<Card className="pt-4 px-2" style={{borderRadius:"2%",width:"100%", webkitBoxShadow:"0 2px 4px 0 rgb(0 0 0 / 50%)"}}>
 						<div className="text-center mx-auto" style={{maxWidth:"300px"}}>
+							{this.state.isImageUploaded?<span onClick={this.handleBack} variant="link" style={{fontSize:"14px",fontWeight:700, cursor:"pointer",textDecoration:"none",color:"rgb(255, 152, 0)",top:"5%", left:"2%"}} className="position-absolute"><FaChevronLeft />  Back</span> :''}
 							<Image src={imageStep} fluid/>
 						</div>
 						<Container className="px-0 py-4 text-center">
