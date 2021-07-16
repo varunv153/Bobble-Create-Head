@@ -1,7 +1,7 @@
 import React from 'react';
 import {Step1} from './step1.jsx';
 import {Step2} from './step2.jsx';
-import {Col,Card, Container,Row,Image } from 'react-bootstrap';
+import {Spinner,Col,Card, Container,Row,Image } from 'react-bootstrap';
 import {createSticker, createGif} from "./GifAndStickerFunctions.jsx"
 
 export class CreatePage extends React.Component
@@ -77,21 +77,31 @@ export class CreatePage extends React.Component
 		else
 		{
 			contentInsideCard = this.state.gif.map((i,index)=>{
-				return (<Image className="p-3" style={{width: "150px"}} src={i} />);
+				return (
+					<Col className="py-3" lg={3} xs={6}>
+						<Image src={i} fluid/>
+					</Col>
+				);
 			});
 
 			let totalLength=0;
-			if(this.state.gender=='male')
+			if(this.state.gender==='male')
 				totalLength = this.maleGifIDs.length + this.maleStickerIds.length;
-			else if(this.state.gender=='female')
+			else if(this.state.gender==='female')
 				totalLength = this.femaleGifIDs.length + this.femaleStickerIds.length;
 			for(let i=contentInsideCard.length;i<totalLength;++i)
-				contentInsideCard.push(  <Image className="p-3" style={{width: "150px"}} src='Images/sample-sticker.jpg' /> );
-
-			contentInsideCard = (
-				<div className="text-left" fluid>
+			{
+				contentInsideCard.push(
+					<Col lg={3} xs={6}>
+						<Image src='Images/sample-sticker.jpg' fluid/>
+						<Spinner animation="border" variant="primary" />
+					</Col>
+				);
+			}
+			contentInsideCard=(
+				<Row className="m-0">
 					{contentInsideCard}
-				</div>
+				</Row>
 			);
 		}
 
